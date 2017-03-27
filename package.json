@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "version": "0.0.1-initial",
+  "description": "Allows behavior-driven tests against React components",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdekrey/react-lifecycle-emulator.git"
+  },
+  "keywords": [
+    "react",
+    "test"
+  ],
+  "author": "Matthew DeKrey and other contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mdekrey/react-lifecycle-emulator/issues"
+  },
+  "homepage": "https://github.com/mdekrey/react-lifecycle-emulator#readme",
+  "peerDependencies": {
+  },
+  "devDependencies": {
+    "@types/react": "15.0.20",
+    "chai": "3.5.0",
+    "mocha": "3.2.0",
+    "testdouble": "2.1.0",
+    "typescript": "2.2.1"
+  }
+}

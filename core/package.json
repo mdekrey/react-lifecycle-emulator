@@ -1,0 +1,28 @@
+{
+  "name": "@react-lifecycle-emulator/core",
+  "version": "0.0.1-initial",
+  "description": "Allows behavior-driven tests against React components",
+  "license": "MIT",
+  "repository": "https://github.com/mdekrey/react-lifecycle-emulator/tree/master/core",
+  "keywords": [
+    "react",
+    "test"
+  ],
+  "contributors": [
+    { "name": "Matthew DeKrey", "email": "matt.dekrey@gmail.com" }
+  ],
+  "bugs": {
+    "url": "https://github.com/mdekrey/react-lifecycle-emulator/issues"
+  },
+  "homepage": "https://github.com/mdekrey/react-lifecycle-emulator#readme",
+
+  "devDependencies": {
+    "@types/react": "15.0.x",
+    "@types/es6-promise": "0.0.x",
+    "@types/mocha": "2.2.x",
+    "@types/node": "7.0.x"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0"
+  }
+}
