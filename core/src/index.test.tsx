@@ -4,6 +4,18 @@ import {expect} from 'chai';
 import * as React from 'react';
 
 import {reactEmulator} from './index';
+import {
+  IChangingProps,
+  IRecordedProps,
+  IRecordedState,
+  ScriptRunner,
+  ScriptToRun,
+} from '../../react-test-environment/src/lifecycle-check';
+
+interface Log {
+  eventName: string;
+  params?: IChangingProps<IRecordedProps, IRecordedState>;
+}
 
 interface IBasicProps {
   onClick?: () => void;
@@ -52,6 +64,66 @@ describe('lifecycle emulator', () => {
     const result = target.getRendered();
 
     expect(result).to.be.null;
+  });
+
+  describe.only('handles lifecycle events properly: ', () => {
+    function run(script: ScriptToRun, result: Log[]) {
+      let done = false;
+      const logs: Log[] = [];
+      const em = reactEmulator<ScriptRunner>(ScriptRunner);
+      const target = em.construct({
+        script,
+        completed: () => done = true,
+        log: (eventName, params) => {
+          logs.push({ eventName, params });
+        },
+      });
+
+      target.controls.mount();
+      const elem = target.getRendered();
+      if (elem) {
+        const childEmulator = reactEmulator(elem.type);
+        const child = childEmulator.construct(elem.props);
+        child.controls.mount();
+        child.controls.checkUpdate();
+
+        target.rendering.subscribe(() => {
+          child.controls.updateProps(target.getRendered()!.props);
+          child.controls.checkUpdate();
+        });
+      }
+
+      for (let i = 0; i < 100 && !done; i++) {
+        target.controls.checkUpdate();
+      }
+
+      expect(JSON.parse(JSON.stringify(logs))).to.be.eql(result);
+      expect(done).to.be.true;
+    }
+
+    it('runs "OnMount" as expected', () => {
+      run('OnMount', require('./test/OnMount.result.json'));
+    });
+
+    it('runs "PropsOnly" as expected', () => {
+      run('PropsOnly', require('./test/PropsOnly.result.json'));
+    });
+
+    it('runs "StateOnly" as expected', () => {
+      run('StateOnly', require('./test/StateOnly.result.json'));
+    });
+
+    it('runs "StateAndPropsAsync" as expected', () => {
+      run('StateAndPropsAsync', require('./test/StateAndPropsAsync.result.json'));
+    });
+
+    it('runs "StateThenCallbackProps" as expected', () => {
+      run('StateThenCallbackProps', require('./test/StateThenCallbackProps.result.json'));
+    });
+
+    it('runs "PropsAndStateInWillReceive" as expected', () => {
+      run('PropsAndStateInWillReceive', require('./test/PropsAndStateInWillReceive.result.json'));
+    });
   });
 
   describe('allows the component to be mounted and then', () => {

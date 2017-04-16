@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 
-import { IChangingProps, LifecycleEventName, ScriptRunner, ScriptToRun } from './lifecycle-check';
+import { IChangingProps, IRecordedProps, IRecordedState, ScriptRunner, ScriptToRun } from './lifecycle-check';
 
 const rootEl = document.getElementById('app');
 
@@ -18,7 +18,7 @@ const scriptOrder: Partial<{[previous in ScriptToRun]: ScriptToRun }> = {
 };
 
 class ScriptHost extends React.Component<{}, IScriptHostState> {
-  runningLog: Object[] = [];
+  runningLog: { eventName: string; params?: IChangingProps<IRecordedProps, IRecordedState>; }[] = [];
 
   constructor() {
     super();
@@ -36,7 +36,7 @@ class ScriptHost extends React.Component<{}, IScriptHostState> {
     );
   }
 
-  log = (eventName: LifecycleEventName, params: IChangingProps<any, any>) => {
+  log = (eventName: string, params?: IChangingProps<IRecordedProps, IRecordedState>) => {
     console.log(eventName, params);
     this.runningLog.push({eventName, params});
   }
