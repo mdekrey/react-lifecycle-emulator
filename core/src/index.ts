@@ -134,3 +134,8 @@ export function reactEmulator<TInstance extends React.Component<any, any>>(type:
     },
   };
 }
+
+export function emulate<P>(target: React.ReactElement<P>, context?: any) {
+  const emulator = reactEmulator(target.type);
+  return emulator.construct(target.props, context);
+}
