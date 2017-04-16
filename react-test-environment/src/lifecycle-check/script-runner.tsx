@@ -17,18 +17,25 @@ export interface IScriptRunnerProps {
     log(eventName: string, status?: IChangingProps<IRecordedProps, any>): void;
 }
 
-export class ScriptRunner extends React.Component<IScriptRunnerProps, IRecordedProps> {
+export interface IScriptRunnerState {
+    script: HookAndInstruction[];
+    recorded: IRecordedProps;
+}
+
+export class ScriptRunner extends React.Component<IScriptRunnerProps, IScriptRunnerState> {
     private started = false;
 
-    constructor() {
+    constructor(props: IScriptRunnerProps) {
         super();
-        this.state = { counterExternal: 0 };
+        this.state = {
+            script: ScriptRunner.getScript(props.script, this),
+            recorded: {counterExternal: 0},
+        };
     }
 
     render() {
-        const script = this.getScript();
         return (
-            <Scripted log={this.log} {...this.state} script={script} recorded={this.state}>
+            <Scripted log={this.log} script={this.state.script} recorded={this.state.recorded}>
             </Scripted>
         );
     }
@@ -52,30 +59,29 @@ export class ScriptRunner extends React.Component<IScriptRunnerProps, IRecordedP
         }
     }
 
-    private stop = (action: () => void = this.props.completed) => {
+    private stop = (action?: () => void) => {
         return () => {
             this.started = false;
-            action();
+            (action || this.props.completed)();
         };
     }
 
-    getScript(): HookAndInstruction[] {
-        const {script} = this.props;
+    static getScript(script: ScriptToRun, target: ScriptRunner): HookAndInstruction[] {
         switch (script) {
             case 'OnMount':
-                this.start();
+                target.start();
                 return [
-                    { on: 'componentDidMount', action: this.stop() },
+                    { on: 'componentDidMount', action: target.stop() },
                 ];
             case 'PropsOnly':
                 return [
                     {
                         on: 'componentDidMount',
-                        action: this.start(
+                        action: target.start(
                             () =>
-                                this.setState(
-                                    { counterExternal: 1 },
-                                    this.stop(),
+                                target.setState(
+                                    { recorded: { counterExternal: 1 } },
+                                    target.stop(),
                                 ),
                             ),
                     },
@@ -84,65 +90,82 @@ export class ScriptRunner extends React.Component<IScriptRunnerProps, IRecordedP
                 return [
                     {
                         on: 'componentDidMount',
-                        action: this.start<HookAndInstruction['action']>(
+                        action: target.start<HookAndInstruction['action']>(
                             (setState) =>
                                 setState(
                                     () => ({ counterInternal: 1 }),
-                                    this.stop(),
+                                    target.stop(),
                                 ),
                             ),
                     },
                 ];
-            case 'StateAndPropsAsync':
+            case 'StateAndPropsAsync': {
+                let finishCount = 0;
+                const finish = () => {
+                    finishCount++;
+                    if (finishCount === 2) {
+                        target.stop()();
+                    }
+                };
                 return [
                     {
                         on: 'componentDidMount',
-                        action: this.start<HookAndInstruction['action']>(
+                        action: target.start<HookAndInstruction['action']>(
                             (setState) => {
-                                let finishCount = 0;
-                                const finish = () => {
-                                    finishCount++;
-                                    if (finishCount === 2) {
-                                        this.stop()();
-                                    }
-                                };
-                                this.setState(
-                                    { counterExternal: 1 },
-                                    finish,
+                                target.setState(
+                                    { recorded: { counterExternal: 1 } },
+                                    () => {
+                                        target.props.log('setPropsFinished');
+                                        finish();
+                                    },
                                 );
                                 setState(
                                     () => ({ counterInternal: 1 }),
-                                    finish,
+                                    () => {
+                                        target.props.log('setStateFinished');
+                                        finish();
+                                    },
                                 );
                             }),
                     },
                 ];
+            }
             case 'StateThenCallbackProps':
                 return [
                     {
                         on: 'componentDidMount',
-                        action: this.start<HookAndInstruction['action']>(
+                        action: target.start<HookAndInstruction['action']>(
                             (setState) =>
                                 setState(
                                     () => ({ counterInternal: 1 }),
                                     () =>
-                                        this.setState(
-                                            { counterExternal: 1 },
-                                            this.stop(),
+                                        target.setState(
+                                            { recorded: { counterExternal: 1 } },
+                                            target.stop(),
                                         ),
                                 ),
                             ),
                     },
                 ];
-            case 'PropsAndStateInWillReceive':
+            case 'PropsAndStateInWillReceive': {
+                let finishCount = 0;
+                const finish = () => {
+                    finishCount++;
+                    if (finishCount === 2) {
+                        target.stop()();
+                    }
+                };
                 return [
                     {
                         on: 'componentDidMount',
-                        action: this.start(
+                        action: target.start(
                             () =>
-                                this.setState(
-                                    { counterExternal: 1 },
-                                    this.stop(),
+                                target.setState(
+                                    { recorded: { counterExternal: 1 } },
+                                    () => {
+                                        target.props.log('setPropsFinished');
+                                        finish();
+                                    },
                                 ),
                             ),
                     },
@@ -151,10 +174,14 @@ export class ScriptRunner extends React.Component<IScriptRunnerProps, IRecordedP
                         action: (setState) =>
                             setState(
                                 () => ({ counterInternal: 1 }),
-                                () => this.props.log('state update completed'),
+                                () => {
+                                    target.props.log('setStateFinished');
+                                    finish();
+                                },
                             ),
                     },
                 ];
+            }
             default:
                 return neverEver(script);
         }
