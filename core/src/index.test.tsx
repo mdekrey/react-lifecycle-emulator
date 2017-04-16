@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 import * as React from 'react';
 
-import {reactEmulator} from './index';
+import {reactEmulator, emulate} from './index';
 import {
   IChangingProps,
   IRecordedProps,
@@ -52,6 +52,14 @@ describe('lifecycle emulator', () => {
 
   it('allows access to calculation functions', () => {
     const target = emulator.construct({ });
+
+    const result = target.component.calculate(1, 2);
+
+    expect(result).to.be.equal(3);
+  });
+
+  it('allows access to calculation functions via the emulate functionality', () => {
+    const target = emulate<Basic>(<Basic />);
 
     const result = target.component.calculate(1, 2);
 

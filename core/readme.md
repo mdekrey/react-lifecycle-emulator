@@ -2,7 +2,7 @@
 
 A package to emulate React's lifecycle for components while making it easy to
 unit test. For more information, see the full [react-lifecycle-emulator
-project](/mdekrey/react-lifecycle-emulator).
+project](/).
 
 ## Core usage
 
@@ -10,8 +10,12 @@ TypeScript:
 
     import {reactEmulator} from 'react-lifecycle-emulator';
 
+    // without TSX
     const emulator = reactEmulator<MyComponent>(MyComponent);
     const target = emulator.construct(initialProps, context);
+
+    // with TSX
+    const target = emulate<MyComponent>(<MyComponent />);
 
     // control lifecycle
     target.controls.mount();

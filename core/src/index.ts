@@ -6,20 +6,20 @@ export interface ISubscribable {
   subscribe(callback: () => void): Unsubscriber;
 }
 
-export interface ComponentConstructor<T, TProps> {
-  new?(props?: TProps, context?: any): T;
+export interface ComponentConstructor<T extends React.Component<any, any>> {
+  new?(props?: T['props'], context?: any): T;
 }
-export interface Emulator<TInstance, TProps> {
+export interface Emulator<TInstance extends React.Component<any, any>> {
   component: TInstance;
   rendering: ISubscribable;
   controls: {
     mount: () => void;
     checkUpdate: () => void;
-    updateProps: (props: TProps, context?: any) => void;
+    updateProps: (props: TInstance['props'], context?: any) => void;
   };
   getRendered(): JSX.Element | null;
 }
-export function reactEmulator<TInstance extends React.Component<any, any>>(type: ComponentConstructor<TInstance, TInstance['props']>) {
+export function reactEmulator<TInstance extends React.Component<any, any>>(type: ComponentConstructor<TInstance>) {
   type TProps = TInstance['props'];
   type TState = TInstance['state'];
   type TContext = TInstance['context'];
@@ -29,7 +29,7 @@ export function reactEmulator<TInstance extends React.Component<any, any>>(type:
   }
 
   return {
-    construct: (originalProps: TProps, originalContext: any = {}): Emulator<TInstance, TProps> => {
+    construct: (originalProps: TProps, originalContext: any = {}): Emulator<TInstance> => {
       const component = new (type as any)(originalProps, originalContext) as TInstance & React.ComponentLifecycle<TProps, any>;
       component.props = originalProps;
       component.context = originalContext;
@@ -135,7 +135,7 @@ export function reactEmulator<TInstance extends React.Component<any, any>>(type:
   };
 }
 
-export function emulate<P>(target: React.ReactElement<P>, context?: any) {
-  const emulator = reactEmulator(target.type);
+export function emulate<T extends React.Component<any, any>>(target: React.ReactElement<T['props']>, context?: any) {
+  const emulator = reactEmulator<T>(target.type);
   return emulator.construct(target.props, context);
 }
