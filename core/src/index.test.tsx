@@ -81,20 +81,17 @@ describe('lifecycle emulator', () => {
 
       target.controls.mount();
       const elem = target.getRendered();
-      if (elem) {
-        const childEmulator = reactEmulator(elem.type);
-        const child = childEmulator.construct(elem.props);
-        child.controls.mount();
-        child.controls.checkUpdate();
+      const childEmulator = reactEmulator(elem!.type);
+      const child = childEmulator.construct(elem!.props);
+      child.controls.mount();
 
-        target.rendering.subscribe(() => {
-          child.controls.updateProps(target.getRendered()!.props);
-          child.controls.checkUpdate();
-        });
-      }
+      target.rendering.subscribe(() => {
+        child.controls.updateProps(target.getRendered()!.props);
+      });
 
       for (let i = 0; i < 100 && !done; i++) {
         target.controls.checkUpdate();
+        child.controls.checkUpdate();
       }
 
       expect(JSON.parse(JSON.stringify(logs))).to.be.eql(result);
