@@ -18,6 +18,8 @@ const scriptOrder: Partial<{[previous in ScriptToRun]: ScriptToRun }> = {
 };
 
 class ScriptHost extends React.Component<{}, IScriptHostState> {
+  runningLog: Object[] = [];
+
   constructor() {
     super();
     this.state = { activeScript: 'OnMount' };
@@ -28,19 +30,22 @@ class ScriptHost extends React.Component<{}, IScriptHostState> {
       return null;
     }
     console.group(this.state.activeScript);
+    this.runningLog = [];
     return (
       <ScriptRunner script={this.state.activeScript} completed={this.completed} log={this.log} />
     );
   }
 
-  log(eventName: LifecycleEventName, params: IChangingProps<any, any>) {
+  log = (eventName: LifecycleEventName, params: IChangingProps<any, any>) => {
     console.log(eventName, params);
+    this.runningLog.push({eventName, params});
   }
 
   completed = () => {
     const { activeScript } = this.state;
     if (activeScript) {
       console.groupEnd();
+      console.log(this.runningLog);
       this.setState(
         () => ({ activeScript: null }),
         () => this.setState({ activeScript: scriptOrder[activeScript] }),
