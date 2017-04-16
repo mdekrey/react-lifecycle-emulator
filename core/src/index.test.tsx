@@ -66,7 +66,7 @@ describe('lifecycle emulator', () => {
     expect(result).to.be.null;
   });
 
-  describe.only('handles lifecycle events properly: ', () => {
+  describe('handles lifecycle events properly: ', () => {
     function run(script: ScriptToRun, result: Log[]) {
       let done = false;
       const logs: Log[] = [];
@@ -94,7 +94,7 @@ describe('lifecycle emulator', () => {
         child.controls.checkUpdate();
       }
 
-      expect(JSON.parse(JSON.stringify(logs))).to.be.eql(result);
+      expect(logs).to.be.eql(result);
       expect(done).to.be.true;
     }
 

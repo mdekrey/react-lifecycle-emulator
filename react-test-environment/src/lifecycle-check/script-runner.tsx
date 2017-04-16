@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { IChangingProps } from './log';
 import { HookAndInstruction, IRecordedProps, IScriptedProps, Scripted } from './scripted';
 
 export type ScriptToRun =
@@ -14,7 +13,7 @@ export type ScriptToRun =
 export interface IScriptRunnerProps {
     script: ScriptToRun;
     completed: () => void;
-    log(eventName: string, status?: IChangingProps<IRecordedProps, any>): void;
+    log: IScriptedProps['log'];
 }
 
 export interface IScriptRunnerState {
@@ -115,14 +114,12 @@ export class ScriptRunner extends React.Component<IScriptRunnerProps, IScriptRun
                                 target.setState(
                                     { recorded: { counterExternal: 1 } },
                                     () => {
-                                        target.props.log('setPropsFinished');
                                         finish();
                                     },
                                 );
                                 setState(
                                     () => ({ counterInternal: 1 }),
                                     () => {
-                                        target.props.log('setStateFinished');
                                         finish();
                                     },
                                 );
@@ -163,7 +160,6 @@ export class ScriptRunner extends React.Component<IScriptRunnerProps, IScriptRun
                                 target.setState(
                                     { recorded: { counterExternal: 1 } },
                                     () => {
-                                        target.props.log('setPropsFinished');
                                         finish();
                                     },
                                 ),
@@ -175,7 +171,6 @@ export class ScriptRunner extends React.Component<IScriptRunnerProps, IScriptRun
                             setState(
                                 () => ({ counterInternal: 1 }),
                                 () => {
-                                    target.props.log('setStateFinished');
                                     finish();
                                 },
                             ),

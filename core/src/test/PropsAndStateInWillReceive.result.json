@@ -2,7 +2,5 @@
     {"eventName":"componentWillReceiveProps","params":{"current":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"prev":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"next":{"props":{"counterExternal":1},"state":{"counterInternal":0}}}},
     {"eventName":"shouldComponentUpdate","params":{"current":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"prev":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"next":{"props":{"counterExternal":1},"state":{"counterInternal":1}}}},
     {"eventName":"componentWillUpdate","params":{"current":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"prev":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"next":{"props":{"counterExternal":1},"state":{"counterInternal":1}}}},
-    {"eventName":"componentDidUpdate","params":{"current":{"props":{"counterExternal":1},"state":{"counterInternal":1}},"prev":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"next":{"props":{"counterExternal":1},"state":{"counterInternal":1}}}},
-    {"eventName":"setStateFinished"},
-    {"eventName":"setPropsFinished"}
+    {"eventName":"componentDidUpdate","params":{"current":{"props":{"counterExternal":1},"state":{"counterInternal":1}},"prev":{"props":{"counterExternal":0},"state":{"counterInternal":0}},"next":{"props":{"counterExternal":1},"state":{"counterInternal":1}}}}
 ]
