@@ -4,6 +4,8 @@
   "description": "Allows behavior-driven tests against React components",
   "license": "MIT",
   "repository": "https://github.com/mdekrey/react-lifecycle-emulator/tree/master/core",
+  "main": "dist/index.js",
+  "typings": "dist/index",
   "keywords": [
     "react",
     "test"
