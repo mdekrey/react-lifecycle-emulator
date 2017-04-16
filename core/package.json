@@ -1,6 +1,6 @@
 {
   "name": "@react-lifecycle-emulator/core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Allows behavior-driven tests against React components",
   "license": "MIT",
   "repository": "https://github.com/mdekrey/react-lifecycle-emulator/tree/master/core",
