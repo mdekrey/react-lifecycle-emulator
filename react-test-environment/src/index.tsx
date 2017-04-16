@@ -1,14 +1,58 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 
-import {LifecycleCheck} from './lifecycle-check';
+import { IChangingProps, LifecycleEventName, ScriptRunner, ScriptToRun } from './lifecycle-check';
 
 const rootEl = document.getElementById('app');
+
+interface IScriptHostState {
+  activeScript: ScriptToRun | null | undefined;
+}
+
+const scriptOrder: Partial<{[previous in ScriptToRun]: ScriptToRun }> = {
+  'OnMount': 'PropsOnly',
+  'PropsOnly': 'StateOnly',
+  'StateOnly': 'StateAndPropsAsync',
+  'StateAndPropsAsync': 'StateThenCallbackProps',
+  'StateThenCallbackProps': 'PropsAndStateInWillReceive',
+};
+
+class ScriptHost extends React.Component<{}, IScriptHostState> {
+  constructor() {
+    super();
+    this.state = { activeScript: 'OnMount' };
+  }
+
+  render() {
+    if (!this.state.activeScript) {
+      return null;
+    }
+    console.group(this.state.activeScript);
+    return (
+      <ScriptRunner script={this.state.activeScript} completed={this.completed} log={this.log} />
+    );
+  }
+
+  log(eventName: LifecycleEventName, params: IChangingProps<any, any>) {
+    console.log(eventName, params);
+  }
+
+  completed = () => {
+    const { activeScript } = this.state;
+    if (activeScript) {
+      console.groupEnd();
+      this.setState(
+        () => ({ activeScript: null }),
+        () => this.setState({ activeScript: scriptOrder[activeScript] }),
+      );
+    }
+  }
+}
 
 // And render our App into it, inside the HMR App Container which handles the reloading
 render(
   <div>
-    <LifecycleCheck />
+    <ScriptHost />
   </div>,
   rootEl,
 );
