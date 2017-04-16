@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "version": "0.0.1-initial",
+  "description": "Allows behavior-driven tests against React components",
+  "license": "MIT",
+  "repository": "https://github.com/mdekrey/react-lifecycle-emulator/tree/master/core",
+  "keywords": [
+    "react",
+    "test"
+  ],
+  "contributors": [
+    { "name": "Matthew DeKrey", "email": "matt.dekrey@gmail.com" }
+  ],
+  "bugs": {
+    "url": "https://github.com/mdekrey/react-lifecycle-emulator/issues"
+  },
+  "homepage": "https://github.com/mdekrey/react-lifecycle-emulator#readme",
+  "scripts": {
+    "start": "webpack-dev-server --config config/webpack.config.js"
+  },
+
+  "devDependencies": {
+    "@types/react": "15.0.10",
+    "@types/react-dom": "0.14.19",
+    "awesome-typescript-loader": "3.1.2",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
+    "typescript": "2.2.2",
+    "webpack": "2.3.2",
+    "webpack-dev-server": "2.4.2"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0"
+  }
+}
