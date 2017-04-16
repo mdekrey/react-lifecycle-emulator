@@ -10,7 +10,7 @@ import {
   IRecordedState,
   ScriptRunner,
   ScriptToRun,
-} from '../../react-test-environment/src/lifecycle-check';
+} from './lifecycle-check';
 
 interface Log {
   eventName: string;
