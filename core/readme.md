@@ -2,7 +2,7 @@
 
 A package to emulate React's lifecycle for components while making it easy to
 unit test. For more information, see the full [react-lifecycle-emulator
-project](/).
+project](/readme.md).
 
 ## Core usage
 
