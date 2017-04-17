@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/mdekrey/react-lifecycle-emulator#readme",
   "scripts": {
-    "build": "npm run lint && npm run ts",
+    "build": "npm run clean && npm run lint && npm run ts",
+    "clean": "rimraf dist",
     "prepublishOnly": "npm run build && npm run test",
     "lint": "tslint --type-check --project ./tsconfig.json src/**/*.ts",
     "ts": "tsc",
@@ -35,6 +36,7 @@
     "chai": "3.5.0",
     "mocha": "3.2.0",
     "react": "15.4.2",
+    "rimraf": "2.6.1",
     "ts-node": "3.0.2",
     "tslint": "4.5.1",
     "typescript": "2.2.1"
