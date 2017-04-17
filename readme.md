@@ -1,7 +1,8 @@
 # React Lifecycle Emulator
 
 Allows behavior-driven tests against React components by exposing the raw
-functions to test harnesses.
+functions to test harnesses. Built with TypeScript and shipped with JS files, so
+you can use it wherever and however you please.
 
 ## Welcome
 
