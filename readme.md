@@ -1,3 +1,7 @@
+# Deprecation Notice
+
+This was a WIP project that was never ready for or used in production. These days, Jest is a much better tool than when I initially wrote this.
+
 # React Lifecycle Emulator
 
 Allows behavior-driven tests against React components by exposing the raw
